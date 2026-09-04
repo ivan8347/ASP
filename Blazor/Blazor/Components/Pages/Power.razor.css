@@ -71,12 +71,11 @@
 
 .flying-baba
 {
-    width: 180px; /* реальная ширина вашей картинки */
+    width: 180px; 
     height: auto;
     position: absolute;
    /* top: 20px;
     margin:10px 10px;*/
-    /* Старт: слева за экраном, обычная ориентация */
     transform: translateX(-200px);
     transform-origin: center center;
     animation: none;
@@ -84,7 +83,6 @@
 
     .flying-baba.active
     {
-        /* Без alternate! Весь путь описан в keyframes */
         animation: flyAndReturn 20s linear forwards;
     }
 
@@ -92,25 +90,21 @@
 {
     0%
     {
-        /* Старт: слева за экраном, смотрит вправо */
         transform: translateX(-200px);
     }
 
     49%
     {
-        /* Долетела до правого края, всё ещё смотрит вправо */
         transform: translateX(calc(100vw - 180px));
     }
 
     50%
     {
-        /* РАЗВОРОТ: на правом краю, зеркально отражается */
         transform: translateX(calc(100vw - 180px)) scaleX(-1);
     }
 
     100%
     {
-        /* Возврат: летит обратно налево, остаётся зеркальной */
         transform: translateX(-200px) scaleX(-1);
     }
 }

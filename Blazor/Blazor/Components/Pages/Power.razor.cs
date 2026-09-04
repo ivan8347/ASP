@@ -15,14 +15,10 @@ namespace Blazor.Components.Pages
         {
             result = Math.Pow(a, b);
 
-            // 1. Убираем класс
             isBabaFlying = false;
-            StateHasChanged(); // Принудительно просим Blazor обновить DOM
 
-            // 2. Ждем 1 кадр (минимум 16мс, ставим 50мс для надежности)
             await Task.Delay(50);
 
-            // 3. Добавляем класс обратно -> Браузер видит изменение и запускает animation
             isBabaFlying = true;
         }
 
