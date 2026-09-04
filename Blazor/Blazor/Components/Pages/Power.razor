@@ -1,36 +1,13 @@
-﻿@* @page "/Power"
-@rendermode InteractiveServer
-@using System.Numerics;
-
-<h1>Power</h1>
-
-<div class="power">
-
-<input type="number" min="1" @bind="n" @bind:after="Calculate"/>
-
-<input type="number" min="1" @bind="n" @bind:after="Calculate"/>
-
-<h3>! = @f</h3>
-</div>
-<button class="btn btn-primary" @onclick="Calculate">Calculate</button>
-
- *@
+﻿
 @page "/power"
 @rendermode InteractiveServer
 
 <h1>Power</h1>
 
-
-
 <div class="power">
-    <input type="number" min="1" @bind="a" @bind:after="CalculateAsync" />
-    <sup><input type="number" min="1" @bind="b" @bind:after="CalculateAsync" /></sup>
-    <button class="btn btn-primary" @onclick="CalculateAsync"> Calculate</button>
-</div>
-
-<div class="animation-container">
-    <img src="images/baba-yaga.png" alt="Баба‑Яга"
-         class="flying-baba @(isBabaFlying ? "active" : "")" />
+    <input type="number" min="1" @bind="a" @bind:after="Calculate" />
+    <sup><input type="number" min="1" @bind="b" @bind:after="Calculate" /></sup>
+    <button class="btn btn-primary" @onclick="Calculate"> Calculate</button>
 </div>
 
 <div class="result">
@@ -38,10 +15,4 @@
 </div>
 
 
-
-
-@* @if (result != 0 || (a == 0 && b == 0))
-{
-    <input type="number" @bind="b" />
-} *@
 
