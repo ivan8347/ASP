@@ -1,0 +1,119 @@
+﻿
+
+.power 
+{
+    display: flex;
+}
+
+.power input 
+{
+    margin:25px 0 0 0 ;
+    font-size: 30px;
+    width: 120px;
+    height:50px;
+    text-align: right;
+   /* border: #a4cbef;
+    background-color:#a4caee*/
+}
+    .power  sup input
+    {
+        font-size: 24px;
+        width: 80px;
+        height:30px;
+        text-align: left;
+    }
+
+.result 
+{
+    margin: 20px 20px;
+}
+.power button
+{
+    margin:30px;
+}
+
+/*.sunrise-bg {
+     Градиент от lightskyblue к pink 
+    background: linear-gradient( 45deg, darkblue, pink );
+     Плавная анимация (15 секунд, туда‑обратно) 
+    animation: sunrise-animation 25s infinite alternate;
+     Растягиваем градиент, чтобы он мог «ездить» 
+    background-size: 400% 400%;
+     На всю высоту и ширину 
+    min-height: 100vh;
+    width: 100%;
+}
+
+@keyframes sunrise-animation {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}*/
+
+
+
+.animation-container
+{
+    position: relative;
+    width: 100%;
+    height: 450px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.flying-baba
+{
+    width: 180px; /* реальная ширина вашей картинки */
+    height: auto;
+    position: absolute;
+   /* top: 20px;
+    margin:10px 10px;*/
+    /* Старт: слева за экраном, обычная ориентация */
+    transform: translateX(-200px);
+    transform-origin: center center;
+    animation: none;
+}
+
+    .flying-baba.active
+    {
+        /* Без alternate! Весь путь описан в keyframes */
+        animation: flyAndReturn 20s linear forwards;
+    }
+
+@keyframes flyAndReturn
+{
+    0%
+    {
+        /* Старт: слева за экраном, смотрит вправо */
+        transform: translateX(-200px);
+    }
+
+    49%
+    {
+        /* Долетела до правого края, всё ещё смотрит вправо */
+        transform: translateX(calc(100vw - 180px));
+    }
+
+    50%
+    {
+        /* РАЗВОРОТ: на правом краю, зеркально отражается */
+        transform: translateX(calc(100vw - 180px)) scaleX(-1);
+    }
+
+    100%
+    {
+        /* Возврат: летит обратно налево, остаётся зеркальной */
+        transform: translateX(-200px) scaleX(-1);
+    }
+}
+
+
+

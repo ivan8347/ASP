@@ -1,4 +1,4 @@
-.page {
+﻿.page {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -6,6 +6,7 @@
 
 main {
     flex: 1;
+
 }
 
 .sidebar {
@@ -13,7 +14,7 @@ main {
 }
 
 .top-row {
-    background-color: #f7f7f7;
+    /*background-image: repeating-conic-gradient(to bottom right,#9bccf3, #c9c6df);*/
     border-bottom: 1px solid #d6d5d5;
     justify-content: flex-end;
     height: 3.5rem;
@@ -48,7 +49,10 @@ main {
 
 @media (min-width: 641px) {
     .page {
-        flex-direction: row;
+        flex-direction: row; 
+        /*
+        background-image: linear-gradient(to bottom left,lightskyblue, pink);
+        background-attachment: fixed;*/
     }
 
     .sidebar {
@@ -94,3 +98,34 @@ main {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+.sunrise-bg
+{
+    /* Градиент от lightskyblue к pink */
+    background: linear-gradient( 60deg,#0e2162,#3a0647, lightskyblue, pink );
+    /* Плавная анимация (15 секунд, туда‑обратно) */
+    animation: sunrise-animation 20s infinite alternate;
+    /* Растягиваем градиент, чтобы он мог «ездить» */
+    background-size: 400% 400%;
+    /* На всю высоту и ширину */
+    min-height: 100vh;
+    width: 100%;
+}
+
+@keyframes sunrise-animation
+{
+    0%
+    {
+        background-position: 0% 50%;
+    }
+
+    50%
+    {
+        background-position: 100% 50%;
+    }
+
+    100%
+    {
+        background-position: 0% 50%;
+    }
+}

@@ -1,0 +1,22 @@
+﻿
+ @page "/Fibonacci"
+
+@rendermode InteractiveServer
+
+<h1>Fibonacci</h1>
+
+<div class="fibonacci">
+    <input type="number" min="1" @bind="n" @bind:after="Calculate" />
+    <button class="btn btn-primary" @onclick="Calculate">Calculate</button>
+</div>
+        <h3>Ряд Фибоначчи:</h3>
+
+@if (F.Count > 0)
+{
+        <ul>
+        @foreach (var value in F)
+        {
+            <li>@value</li>
+        }
+        </ul>
+}
