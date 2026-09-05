@@ -1,35 +1,43 @@
 ﻿
 
-.power 
+.power
 {
     display: flex;
+    align-items: center;
 }
 
-.power input 
-{
-    margin:25px 0 0 0 ;
-    font-size: 30px;
-    width: 120px;
-    height:50px;
-    text-align: right;
-    border: #a4cbef;
-    background-color:#a4caee
-}
-    .power  sup input
+    .power input
+    {
+        margin: 0px 0 0 0;
+        font-size: 30px;
+        width: 120px;
+        height: 50px;
+        text-align: right;
+        border: #a4cbef;
+        background-color: #a4caee
+    }
+
+    .power sup input
     {
         font-size: 24px;
-        width: 80px;
-        height:30px;
+        width: 50px;
+        height: 30px;
         text-align: left;
     }
 
-.result 
+.result
 {
     margin: 20px 20px;
 }
+
+.result h3
+{
+    margin: 0;
+}
+
 .power button
 {
-    margin:30px;
+    margin: 30px;
 }
 
 /*.sunrise-bg {

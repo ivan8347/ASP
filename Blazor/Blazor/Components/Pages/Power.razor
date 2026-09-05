@@ -1,5 +1,4 @@
-﻿
-@page "/power"
+﻿@page "/power"
 @rendermode InteractiveServer
 
 <h1>Power</h1>
@@ -7,12 +6,14 @@
 <div class="power">
     <input type="number" min="1" @bind="a" @bind:after="Calculate" />
     <sup><input type="number" min="1" @bind="b" @bind:after="Calculate" /></sup>
-    <button class="btn btn-primary" @onclick="Calculate"> Calculate</button>
-</div>
+    <div class="result">
+        <h3 style="margin:0;"> = @result</h3>
+        @* <h3>Result: @a<sup>@b</sup> = @result</h3> *@
+    </div>
 
-<div class="result">
-    <h3>Result: @a<sup>@b</sup> = @result</h3>
 </div>
+<button class="btn btn-primary" @onclick="Calculate"> Calculate</button>
+
 
 
 
