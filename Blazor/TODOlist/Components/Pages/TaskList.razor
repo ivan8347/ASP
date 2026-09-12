@@ -1,4 +1,4 @@
-﻿@page "/TaskList"
+﻿@* @page "/TaskList"
 @rendermode InteractiveServer
 
 <h3>TaskList</h3>
@@ -7,13 +7,16 @@
 <button class="btn btn-primary" @onclick="AddTask">Добавить</button>
 
 <ul>
-    @foreach(TODO task in tasklist)
+    @foreach (TODO task in tasklist)
     {
+       
         
-    <li>
-        <input type="checkbox" @bind="@task.DONE" />
-        @task.Description
-    </li>
+        <li>
+            <label>
+                <input type="checkbox" @bind="@task.DONE"/>
+                    @task.Description
+            </label>
+        </li>
     }
 
 </ul>
@@ -24,14 +27,14 @@
     List<TODO> tasklist =
         [
 
-    new TODO{Description ="Полить цветы"   ,DONE = true},
-    new TODO{Description ="Покормить кота" ,DONE = true},
-    new TODO{Description ="Сходить в магаз",DONE = true},
+    new TODO{Description ="Полить цветы"   ,DONE = false},
+    new TODO{Description ="Покормить кота" ,DONE = false},
+    new TODO{Description ="Сходить в магаз",DONE = false},
     ];
 
     void AddTask()
     {
-        if(!string.IsNullOrEmpty(description) && !string.IsNullOrWhiteSpace(description))
+        if (!string.IsNullOrEmpty(description) && !string.IsNullOrWhiteSpace(description))
         {
             TODO task = new TODO { Description = description };
             if (tasklist.Contains(task)) return;
@@ -40,4 +43,209 @@
         }
 
     }
+    void MarkTask(TODO task)
+    {
+        task.DONE = !task.DONE;
+        StateHasChanged();
+    }
+} *@
+
+
+@page "/TaskList"
+@rendermode InteractiveServer
+
+@* <h3>TaskList</h3> *@
+
+<svg height="40" width="400" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="grad1" x1="0%" x2="100%" y1="0%" y2="0%">
+            <stop offset="0%" stop-color="yellow" />
+            <stop offset="100%" stop-color="#007bff" />
+        </linearGradient>
+    </defs>
+    <text x="5" y="30" fill="url(#grad1)" font-size="35" >Домашние дела</text>
+</svg>
+ 
+
+<div class="statistics">
+
+    <span>Всего: @tasklist.Count</span> |
+    <span style="color: green;"> Выполнено:
+        <svg height="40" width="50" xmlns="http://www.w3.org/2000/svg">
+            <text x="5" y="30" fill="none" stroke="green" font-size="28">@CompletedCount</text>
+        </svg>
+    </span> |
+    <span style="color: red;">Осталось: 
+        <svg height="40" width="50" xmlns="http://www.w3.org/2000/svg">
+            <text x="5" y="30" fill="none" stroke="red" font-size="28">@RemainingCount</text>
+        </svg>
+        </span>|
+    <span style="color: #007bff;">Просто молодец: 
+        <svg height="40" width="100" xmlns="http://www.w3.org/2000/svg">
+            <text x="5" y="30" fill="none" stroke="#007bff" font-size="28">@CompletionPercent%</text>
+        </svg>
+        </span>
+</div>
+
+<div style="display: flex; gap: 8px; margin-bottom: 1rem;">
+    <input type="text" @bind="description" placeholder="Новая задача..." style="flex-grow: 1;" />
+    @*  <button class="btn btn-primary" @onclick="AddTask">Добавить</button> *@
+    <button @onclick="AddTask"
+            class="btn btn"
+            aria-label="Добавить">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            @*  class="btn btn-outline-success btn-lg"
+            <circle cx="12" cy="12" r="14"
+                    stroke="#28a745"
+                    stroke-width="3"
+                    fill="none" /> *@
+            <path d=" M0 12 H24 M12 0 V24" stroke="#28a745" stroke-width="8" />
+        </svg>
+    </button>
+</div>
+
+<ul style="list-style: none; padding: 0;">
+    @foreach (var task in tasklist)
+    {
+        <li>
+            <div @onclick="() => MarkTask(task)" style="flex-grow: 1; cursor: pointer">
+                <input type="checkbox" checked="@task.DONE" />
+                <span class="@(task.DONE ? "completed-task" : "")">
+                    @task.Description
+                </span>
+            </div>
+            <button @onclick="() => Delete(task)"
+                    class="btn btn-sm "
+                    aria-label="Удалить">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22 6L5 22M5 6L22 22" stroke="#dc3545" stroke-width="8" />
+                </svg>
+            </button>
+
+            @*  <button @onclick="() => Delete(task)" class="btn btn-sm btn-danger"> Удалить</button> *@
+        </li>
+    }
+</ul>
+
+@code {
+    string description = "";
+
+    List<TODO> tasklist = new()
+    {
+        new TODO { Description = "Полить цветы", DONE = false },
+        new TODO { Description = "Покормить кота", DONE = false },
+        new TODO { Description = "Сходить в магаз", DONE = false }
+    };
+
+    int CompletedCount => tasklist.Count(t => t.DONE);
+    int RemainingCount => tasklist.Count(t => !t.DONE);
+
+    int CompletionPercent => tasklist.Count == 0
+        ? 0
+        : (int)Math.Round((double)CompletedCount / tasklist.Count * 100);
+
+    void AddTask()
+    {
+        if (!string.IsNullOrWhiteSpace(description))
+        {
+            if (!tasklist.Any(t => t.Description.Equals(description, StringComparison.OrdinalIgnoreCase)))
+            {
+                tasklist.Add(new TODO { Description = description, DONE = false });
+                description = "";
+            }
+        }
+    }
+
+    void MarkTask(TODO task)
+    {
+        task.DONE = !task.DONE;
+        StateHasChanged();
+    }
+
+    void Delete(TODO task)
+    {
+        tasklist.Remove(task);
+        StateHasChanged();
+    }
 }
+
+
+@* 
+ @page "/TaskList"
+@rendermode InteractiveServer
+
+<h3>TaskList</h3>
+
+<!-- Панель статистики -->
+<div class="statistics">
+    <span style="font-weight:bold;">Всего: @tasklist.Count </span> |
+    <span style="color: green;font-weight: bold;">Выполнено: @CompletedCount</span> |
+    <span style="color: red;font-weight:bold;">Осталось: @RemainingCount</span> |
+    <span style="color: #007bff; font-weight: bold;">Просто молодец: @CompletionPercent%</span>
+</div>
+
+<input type="text" @bind="description" placeholder="Новая задача..." />
+<button class="btn btn-primary" @onclick="AddTask">Добавить</button>
+
+<ul style="list-style: none; padding: 0;">
+    @foreach (var task in tasklist)
+    {
+        <li  @onclick="() => ToggleTask(task)" style="display: block; cursor: pointer;">
+            <input type="checkbox" checked="@task.DONE"/>
+            <span class="@(task.DONE ? "completed-task" : "")">
+                @task.Description
+            </span>
+               <!-- Кнопка удаления -->
+            <button @onclick="() => DeleteTask(task)"
+                    class="btn btn-sm btn-danger"
+                    style="padding: 4px 8px; font-size: 0.85rem;">
+                Удалить
+            </button>
+        </li>
+    }
+</ul>
+
+@code {
+    string description = "";
+
+    List<TODO> tasklist = new()
+    {
+        new TODO { Description = "Полить цветы", DONE =     false },
+        new TODO { Description = "Покормить кота", DONE =   false },
+        new TODO { Description = "Сходить в магаз", DONE =  false }
+    };
+
+
+    int CompletedCount => tasklist.Count(t => t.DONE);
+    int RemainingCount => tasklist.Count(t => !t.DONE);
+
+    int CompletionPercent => tasklist.Count == 0
+        ? 0
+        : (int)Math.Round((double)CompletedCount / tasklist.Count * 100);
+
+
+
+    void AddTask()
+    {
+        if (!string.IsNullOrWhiteSpace(description))
+        {
+            if (!tasklist.Any(t => t.Description.Equals(description, StringComparison.OrdinalIgnoreCase)))
+            {
+                tasklist.Add(new TODO { Description = description, DONE = false });
+                description = "";
+            }
+        }
+    }
+
+    void ToggleTask(TODO task)
+    {
+        task.DONE = !task.DONE;
+        StateHasChanged();
+    }
+    void DeleteTask(TODO task)
+    {
+        tasklist.Remove(task);
+        StateHasChanged();
+    }
+}
+  *@

@@ -1,0 +1,140 @@
+﻿@page "/Converter"
+@rendermode InteractiveServer
+
+<h3>Конвертер систем счисления</h3>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+    
+    <!-- Dec -> Bin -->
+    <div>
+        <label style="font-weight: bold;">Dec → Bin</label>
+        <!-- Используем oninput, чтобы считать сразу при вводе цифры -->
+        <input type="number" @oninput="OnDecChange" placeholder="Десятичное" style="width: 100%; margin-top: 4px;" />
+        <div style="margin-top: 8px; font-weight: bold;">Результат: @dec2BinResult</div>
+    </div>
+
+    <!-- Dec -> Hex -->
+    <div>
+        <label style="font-weight: bold;">Dec → Hex</label>
+        <input type="number" @oninput="OnDecChange" placeholder="Десятичное" style="width: 100%; margin-top: 4px;" />
+        <div style="margin-top: 8px; font-weight: bold;">Результат: @dec2HexResult</div>
+    </div>
+
+    <!-- Bin -> Dec -->
+    <div>
+        <label style="font-weight: bold;">Bin → Dec</label>
+        <input type="text" @oninput="OnBinChange" placeholder="0/1" style="width: 100%; margin-top: 4px;" />
+        <div style="margin-top: 8px; font-weight: bold;">Результат: @bin2DecResult</div>
+        @if (!string.IsNullOrEmpty(binError))
+        {
+            <div style="color: red; font-size: 0.85rem;">@binError</div>
+        }
+    </div>
+
+    <!-- Hex -> Dec -->
+    <div>
+        <label style="font-weight: bold;">Hex → Dec</label>
+        <input type="text" @oninput="OnHexChange" placeholder="0-9, A-F" style="width: 100%; margin-top: 4px;" />
+        <div style="margin-top: 8px; font-weight: bold;">Результат: @hex2DecResult</div>
+        @if (!string.IsNullOrEmpty(hexError))
+        {
+            <div style="color: red; font-size: 0.85rem;">@hexError</div>
+        }
+    </div>
+</div>
+
+@code {
+    // Переменные для хранения результатов
+    private string dec2BinResult = "";
+    private string dec2HexResult = "";
+    private string bin2DecResult = "";
+    private string hex2DecResult = "";
+    
+    // Переменные для ошибок
+    private string binError = "";
+    private string hexError = "";
+
+    // Обработчик для десятичных чисел (используется и для Bin, и для Hex конвертации)
+    private void OnDecChange(ChangeEventArgs e)
+    {
+        string val = e.Value?.ToString() ?? "";
+        
+        // Если поле пустое, очищаем результаты
+        if (string.IsNullOrEmpty(val))
+        {
+            dec2BinResult = "";
+            dec2HexResult = "";
+            return;
+        }
+
+        if (int.TryParse(val, out int number))
+        {
+            // Конвертация Dec -> Bin
+            dec2BinResult = Convert.ToString(number, 2);
+            
+            // Конвертация Dec -> Hex
+            dec2HexResult = number.ToString("X");
+        }
+        else
+        {
+            // Если ввели не число (например, буквы)
+            dec2BinResult = "Ошибка ввода";
+            dec2HexResult = "Ошибка ввода";
+        }
+    }
+
+    // Обработчик для двоичных чисел
+    private void OnBinChange(ChangeEventArgs e)
+    {
+        string val = e.Value?.ToString() ?? "";
+        binError = "";
+        bin2DecResult = "";
+
+        if (string.IsNullOrEmpty(val)) return;
+
+        // Проверка: только 0 и 1
+        if (!val.All(c => c == '0' || c == '1'))
+        {
+            binError = "Только 0 и 1!";
+            return;
+        }
+
+        try
+        {
+            bin2DecResult = Convert.ToInt32(val, 2).ToString();
+        }
+        catch
+        {
+            binError = "Слишком большое число";
+        }
+    }
+
+    // Обработчик для шестнадцатеричных чисел
+    private void OnHexChange(ChangeEventArgs e)
+    {
+        string val = e.Value?.ToString() ?? "";
+        hexError = "";
+        hex2DecResult = "";
+
+        if (string.IsNullOrEmpty(val)) return;
+
+        // Убираем пробелы и делаем заглавными
+        string cleanVal = val.Trim().ToUpper();
+
+        // Проверка символов 0-9, A-F
+        if (!cleanVal.All(c => (c >= '0' && c <= '9') || (c >= 'A' && c <= 'F')))
+        {
+            hexError = "Только 0-9 и A-F!";
+            return;
+        }
+
+        try
+        {
+            hex2DecResult = Convert.ToInt32(cleanVal, 16).ToString();
+        }
+        catch
+        {
+            hexError = "Слишком большое число";
+        }
+    }
+}

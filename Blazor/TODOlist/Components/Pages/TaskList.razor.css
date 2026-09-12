@@ -1,0 +1,25 @@
+﻿
+
+.TaskList
+{
+    display: flex;
+}
+
+    .completed-task
+
+{
+    text-decoration: line-through;
+    color: #888;
+   /* opacity: 0.7;*/
+}
+.statistics
+{
+    margin: 0 0 20px 0;
+    font-weight: bold;
+}
+li
+{
+    display: flex;
+    align-items: center;
+    padding: 6px 0; 
+}
