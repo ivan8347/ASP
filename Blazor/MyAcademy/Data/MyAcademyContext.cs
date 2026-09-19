@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using MyAcademy.Models;
+
+namespace MyAcademy.Data
+{
+    public class MyAcademyContext : DbContext
+    {
+        public DbSet<MyAcademy.Models.Direction> Directions { get; set; } = default!;
+        public MyAcademyContext (DbContextOptions<MyAcademyContext> options)
+            : base(options)
+        {
+        }
+
+        public DbSet<MyAcademy.Models.Discipline> Disciplines { get; set; } = default!;
+    }
+}
