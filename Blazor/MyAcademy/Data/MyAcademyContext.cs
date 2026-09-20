@@ -16,5 +16,6 @@ namespace MyAcademy.Data
         }
 
         public DbSet<MyAcademy.Models.Discipline> Disciplines { get; set; } = default!;
+        public DbSet<MyAcademy.Models.Student> Students { get; set; } = default!;
     }
 }
