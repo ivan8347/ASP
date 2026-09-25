@@ -1,4 +1,5 @@
-﻿@page "/disciplines"
+﻿ @page "/disciplines"
+ @rendermode InteractiveServer
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using MyAcademy.Models
@@ -6,25 +7,111 @@
 @implements IAsyncDisposable
 @inject IDbContextFactory<MyAcademy.Data.MyAcademyContext> DbFactory
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Discipline</PageTitle>
 
-<h1>Index</h1>
+<h1>Дисциплина</h1>
 
-<p>
-    <a href="disciplines/create">Create New</a>
-</p>
+<div class="controls">
+    <p>
+        <a href="disciplines/create" class="btn btn-primary">Добавить</a>
+    </p>
+    <form action="/disciplines">
+        <input type="search"
+               name="titleFilter"
+               id="search-input"
+               placeholder="Поиск по названию"
+               autocomplete="off" />
+        <input type="submit" value="Поиск" class="btn btn-primary" />
+    </form>
+    <div>
+        <label for="items-per-page"></label>
+        <select @bind="pagination.ItemsPerPage" id="items-per-page">
+            <option value="100">Все</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+        </select>
+    </div>
+</div>
 
-<QuickGrid Class="table" Items="context.Disciplines">
-    <PropertyColumn Property="discipline => discipline.discipline_name" />
-    <PropertyColumn Property="discipline => discipline.number_of_lessons" />
+<div>
+    <div class="grid-container" >
+        <div class="table-wrapper">
+            <QuickGrid Class="table" Items="FilteredDisciplines" Pagination="pagination">
+                <PropertyColumn Property="d => d.discipline_id" Sortable="true" />
+                <PropertyColumn Property="d => d.discipline_name" Sortable="true" Class="title" />
+                <PropertyColumn Property="d => d.number_of_lessons" Sortable="true" />
 
-    <TemplateColumn Context="discipline">
-        <a href="@($"disciplines/edit?discipline_id={discipline.discipline_id}")">Edit</a> |
-        <a href="@($"disciplines/details?discipline_id={discipline.discipline_id}")">Details</a> |
-        <a href="@($"disciplines/delete?discipline_id={discipline.discipline_id}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+                <TemplateColumn Context="discipline">
+                    <a href="@($"disciplines/edit?discipline_id={discipline.discipline_id}")">Edit</a> |
+                    <a href="@($"disciplines/details?discipline_id={discipline.discipline_id}")">Details</a> |
+                    <a href="@($"disciplines/delete?discipline_id={discipline.discipline_id}")">Delete</a>
+                </TemplateColumn>
+            </QuickGrid>
+        </div>
 
+        <div class="paginator-wrapper">
+            <Paginator State="pagination" />
+        </div>
+    </div>
+
+
+</div>
+@code {
+    private MyAcademyContext context = default!;
+    PaginationState pagination = new PaginationState { ItemsPerPage=5};
+
+    [SupplyParameterFromQuery]
+    string TitleFilter{ get; set;}
+
+
+
+
+    IQueryable<Discipline> FilteredDisciplines =>
+    context.Disciplines.Where(discipline => discipline.discipline_name.Contains(TitleFilter ?? string.Empty));
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}
+ 
+
+@* @page "/disciplines"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using MyAcademy.Models
+@using MyAcademy.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<MyAcademy.Data.MyAcademyContext> DbFactory
+
+<PageTitle>Discipline</PageTitle>
+
+<h1>Дисциплина</h1>
+
+
+    <p>
+        <a href="disciplines/create" class="btn btn-primary">Добавить</a>
+    </p>
+        <input type="search"
+               name="titleFilter"
+               id="search-input"
+               placeholder="Поиск по названию"
+               autocomplete="off" />
+        <input type="submit" value="Поиск" class="btn btn-primary" />
+
+        <QuickGrid Class="table" Items="context.Disciplines" >
+            <PropertyColumn Property="discipline => discipline.discipline_id" Sortable="true" />
+            <PropertyColumn Property="discipline => discipline.discipline_name" />
+            <PropertyColumn Property="discipline => discipline.number_of_lessons"  />
+
+            <TemplateColumn Context="discipline">
+                <a href="@($"disciplines/edit?discipline_id={discipline.discipline_id}")">Edit</a> |
+                <a href="@($"disciplines/details?discipline_id={discipline.discipline_id}")">Details</a> 
+                <a href="@($"disciplines/delete?discipline_id={discipline.discipline_id}")">Delete</a>
+            </TemplateColumn>
+        </QuickGrid>
 @code {
     private MyAcademyContext context = default!;
 
@@ -35,3 +122,4 @@
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }
+  *@

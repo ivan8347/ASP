@@ -1,0 +1,16 @@
+﻿.controls
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+::deep .title
+{
+    width: 30%;
+}
+
+.grid-container
+{
+    height: 58vh;
+}

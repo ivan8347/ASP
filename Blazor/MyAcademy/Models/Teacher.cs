@@ -1,13 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyAcademy.Models
 {
-    public class Student
+    public class Teacher
     {
+
         [Key]
-        [Column("stud_id")]
-        public int StudId { get; set; }
+        [Column("teacher_id",TypeName ="SMALLINT")]
+        public int TeacherId { get; set; }
 
         [Column("last_name")]
         public string LastName { get; set; } = string.Empty;
@@ -27,9 +28,12 @@ namespace MyAcademy.Models
         [Column("phone")]
         public string? Phone { get; set; }
 
-       
 
-        [Column("group")]
-        public int? GroupId { get; set; }
+
+        [Column("work_since", TypeName = "DATE")]
+        public DateOnly? WorkSince { get; set; }
+
+        [Column("rate", TypeName = "smallmoney")]
+        public decimal? Rate { get; set; }
     }
 }

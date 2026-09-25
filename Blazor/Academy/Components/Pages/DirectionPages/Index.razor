@@ -37,13 +37,13 @@
             <PropertyColumn Property="direction => direction.direction_name" Sortable="true" Class="title" />
 
             <TemplateColumn Context="direction">
-                <a href="@($"directions/details?direction_id={direction.direction_id}")">Details</a>
+                <a href="@($"directions/details?direction_id={direction.direction_id}")">Details</a> |
+                <a href="@($"directions/delete?direction_id={direction.direction_id}")">Delete</a>
 
             </TemplateColumn>
         </QuickGrid>
     </div>
     <Paginator State="pagination" />
-
 </div>
 @code {
     private AcademyContext context = default!;
