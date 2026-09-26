@@ -67,7 +67,7 @@
 
 
     IQueryable<Discipline> FilteredDisciplines =>
-    context.Disciplines.Where(discipline => discipline.discipline_name.Contains(TitleFilter ?? string.Empty));
+    context.Disciplines.Where(d => d.discipline_name.Contains(TitleFilter ?? string.Empty));
 
     protected override void OnInitialized()
     {
@@ -78,7 +78,13 @@
 }
  
 
-@* @page "/disciplines"
+
+
+
+@* 
+@page "/students"
+@rendermode InteractiveServer
+
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using MyAcademy.Models
@@ -86,34 +92,68 @@
 @implements IAsyncDisposable
 @inject IDbContextFactory<MyAcademy.Data.MyAcademyContext> DbFactory
 
-<PageTitle>Discipline</PageTitle>
+<PageTitle>Index</PageTitle>
 
-<h1>Дисциплина</h1>
-
-
+<h1>Студенты</h1>
+<div class="controls">
     <p>
-        <a href="disciplines/create" class="btn btn-primary">Добавить</a>
+        <a href="students/create" class="btn btn-primary">Добавить</a>
     </p>
+    <form action="/students">
         <input type="search"
                name="titleFilter"
                id="search-input"
-               placeholder="Поиск по названию"
                autocomplete="off" />
+
         <input type="submit" value="Поиск" class="btn btn-primary" />
+    </form>
 
-        <QuickGrid Class="table" Items="context.Disciplines" >
-            <PropertyColumn Property="discipline => discipline.discipline_id" Sortable="true" />
-            <PropertyColumn Property="discipline => discipline.discipline_name" />
-            <PropertyColumn Property="discipline => discipline.number_of_lessons"  />
+    <div>
+        <label for="items-per-page"></label>
+        <select @bind="pagination.ItemsPerPage" id="items-per-page">
+            <option value="1000">Все</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+        </select>
+    </div>
+</div>
 
-            <TemplateColumn Context="discipline">
-                <a href="@($"disciplines/edit?discipline_id={discipline.discipline_id}")">Edit</a> |
-                <a href="@($"disciplines/details?discipline_id={discipline.discipline_id}")">Details</a> 
-                <a href="@($"disciplines/delete?discipline_id={discipline.discipline_id}")">Delete</a>
+
+
+
+<div class="grid-container">
+    <div class="table">
+        <QuickGrid Class="table" Items="FilteredStudents" Pagination="pagination">
+            <PropertyColumn Property="student => student.StudId" Sortable="true" />
+            <PropertyColumn Property="student => student.LastName" Sortable="true" Class="title" />
+            <PropertyColumn Property="student => student.FirstName" />
+            <PropertyColumn Property="student => student.MiddleName" />
+            <PropertyColumn Property="student => student.BirthDate" Sortable="true" />
+            <PropertyColumn Property="student => student.Email" />
+            <PropertyColumn Property="student => student.Phone" />
+            <PropertyColumn Property="student => student.GroupId" Sortable="true" />
+
+            <TemplateColumn Context="student">
+                <a href="@($"students/edit?studid={student.StudId}")">Edit</a> |
+                <a href="@($"students/details?studid={student.StudId}")">Details</a> |
+                <a href="@($"students/delete?studid={student.StudId}")">Delete</a>
             </TemplateColumn>
         </QuickGrid>
+    </div>
+    <div class="pagination">
+        <Paginator State="pagination" />
+    </div>
+</div>
+
 @code {
     private MyAcademyContext context = default!;
+    PaginationState pagination = new PaginationState { ItemsPerPage = 5 };
+
+    [SupplyParameterFromQuery]
+    string TitleFilter { get; set; }
+
+    IQueryable<Discipline> FilteredStudents =>
+    context.Students.Where(student => student.LastName.Contains(TitleFilter ?? string.Empty));
 
     protected override void OnInitialized()
     {
@@ -122,4 +162,5 @@
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }
-  *@
+
+ *@

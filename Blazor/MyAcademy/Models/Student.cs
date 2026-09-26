@@ -27,7 +27,7 @@ namespace MyAcademy.Models
         [Column("phone")]
         public string? Phone { get; set; }
 
-       
+      
 
         [Column("group")]
         public int? GroupId { get; set; }

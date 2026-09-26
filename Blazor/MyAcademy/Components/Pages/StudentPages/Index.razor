@@ -1,4 +1,6 @@
 ﻿@page "/students"
+@rendermode InteractiveServer
+
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using MyAcademy.Models
@@ -6,32 +8,73 @@
 @implements IAsyncDisposable
 @inject IDbContextFactory<MyAcademy.Data.MyAcademyContext> DbFactory
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Students</PageTitle>
 
-<h1>Index</h1>
+<div class="controls" >
 
-<p>
-    <a href="students/create">Create New</a>
-</p>
+    <h2>Студенты</h2>
+    <a href="students/create" class="btn btn-primary" >Добавить</a>
 
-<QuickGrid Class="table" Items="context.Students">
-    <PropertyColumn Property="student => student.LastName" />
-    <PropertyColumn Property="student => student.FirstName" />
-    <PropertyColumn Property="student => student.MiddleName" />
-    <PropertyColumn Property="student => student.BirthDate" />
-    <PropertyColumn Property="student => student.Email" />
-    <PropertyColumn Property="student => student.Phone" />
-    <PropertyColumn Property="student => student.GroupId" />
+    <form action="/students" >
+        <input type="search"
+               name="titleFilter"
+               placeholder="Поиск по фамилии"
+               autocomplete="off" />
+        <button type="submit" class="btn btn-primary" >Поиск</button>
+    </form>
 
-    <TemplateColumn Context="student">
-        <a href="@($"students/edit?studid={student.StudId}")">Edit</a> |
-        <a href="@($"students/details?studid={student.StudId}")">Details</a> |
-        <a href="@($"students/delete?studid={student.StudId}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+    <div >
+        <label for="items-per-page" >На странице:</label>
+        <select @bind="pagination.ItemsPerPage" id="items-per-page" >
+            <option value="1000">Все</option>
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+        </select>
+    </div>
+</div>
 
+<div>
+    <div class="grid-container">
+        <div class="table">
+            <QuickGrid Class="table" Items="FilteredStudents" Pagination="pagination">
+                <PropertyColumn Property="student => student.StudId" Sortable="true" />
+                <PropertyColumn Property="student => student.LastName" Sortable="true" Class="title" />
+                <PropertyColumn Property="student => student.FirstName" />
+                <PropertyColumn Property="student => student.MiddleName" />
+                <PropertyColumn Property="student => student.BirthDate" Sortable="true"  />
+                <PropertyColumn Property="student => student.Email" />
+                <PropertyColumn Property="student => student.Phone" />
+                <PropertyColumn Property="student => student.GroupId" Sortable="true" Class="title" />
+
+                <TemplateColumn Context="student">
+                    <a href="@($"students/edit?studid={student.StudId}")">Edit</a> |
+                    <a href="@($"students/details?studid={student.StudId}")">Details</a> |
+                    <a href="@($"students/delete?studid={student.StudId}")">Delete</a>
+                </TemplateColumn>
+            </QuickGrid>
+        </div>
+        <div class="paginator">
+            <Paginator State="pagination" />
+        </div>
+    </div>
+</div>
 @code {
     private MyAcademyContext context = default!;
+    PaginationState pagination = new PaginationState { ItemsPerPage = 5 };
+
+    [SupplyParameterFromQuery]
+    string TitleFilter { get; set; }
+
+    IQueryable<Student> FilteredStudents =>
+    context.Students.Where
+    (
+        student => 
+        student.LastName.Contains(TitleFilter ?? string.Empty) ||
+        student.FirstName.Contains(TitleFilter ?? string.Empty) ||
+        student.MiddleName.Contains(TitleFilter ?? string.Empty) 
+        
+    ); 
 
     protected override void OnInitialized()
     {
@@ -40,3 +83,4 @@
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }
+
