@@ -18,7 +18,7 @@
     <form action="/students" >
         <input type="search"
                name="titleFilter"
-               placeholder="Поиск по фамилии"
+               placeholder="Поиск по Ф.И.О."
                autocomplete="off" />
         <button type="submit" class="btn btn-primary" >Поиск</button>
     </form>
@@ -48,8 +48,8 @@
                 <PropertyColumn Property="student => student.GroupId" Sortable="true" Class="title" />
 
                 <TemplateColumn Context="student">
-                    <a href="@($"students/edit?studid={student.StudId}")">Edit</a> |
-                    <a href="@($"students/details?studid={student.StudId}")">Details</a> |
+                    <a href="@($"students/edit?studid={student.StudId}")">Edit</a> 
+                    <a href="@($"students/details?studid={student.StudId}")">Details</a> 
                     <a href="@($"students/delete?studid={student.StudId}")">Delete</a>
                 </TemplateColumn>
             </QuickGrid>
