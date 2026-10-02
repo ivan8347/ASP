@@ -1,0 +1,79 @@
+﻿@page "/groups/details"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using MyAcademy.Models
+@inject IDbContextFactory<MyAcademy.Data.MyAcademyContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+@* <h1>Details</h1>
+ *@
+<div>
+    @if (group is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <div class="controls">
+            <h2>Группа</h2>
+            <h2><dd >@group.group_name</dd></h2>
+            <p><a href="@($"/groups/edit?group_id={group.group_id}")" class="btn btn-primary">Добавить</a> </p>
+        </div>
+    <hr />
+            <a href="@($"/groups")">Back to List</a>
+            <hr/>
+
+        <dl class="row">
+            <dt class="col-sm-3">group_name</dt>
+            <dd class="col-sm-9">@group.group_name</dd>
+            <dt class="col-sm-3">Количество студентов:</dt>
+            <dd class="col-sm-9">@group.Students.Count</dd>
+            <dt class="col-sm-3">Направление:</dt>
+            <dd class="col-sm-9">@group.Direction.direction_name</dd>
+            <dt class="col-sm-3">Дни обучения:</dt>
+            <dd class="col-sm-9">@group.learningDays</dd>
+            <dt class="col-sm-3">Начало занятий:</dt>
+            <dd class="col-sm-9">@group.start_time</dd>
+            <dt class="col-sm-3">Дни обучения:</dt>
+            <dd class="col-sm-9">@group.start_date</dd>
+        </dl>
+        <div>
+        </div>
+        <hr/>
+        <ul>
+          <ol>
+
+          @foreach (Student student in group.Students)
+            {
+                    <li>
+                        <a href="@($"/students/details?studid={student.stud_id}")">
+                            @student.last_name  @student.first_name @student.middle_name
+                        </a>
+                    </li>
+            }
+          </ol>  
+
+        </ul>
+        
+    }
+</div>
+
+@code {
+    private Group? group;
+
+    [SupplyParameterFromQuery]
+    private int group_id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        group = await context.Groups.Include(g => g.Students).
+        Include(g =>g.Direction).FirstOrDefaultAsync(m => m.group_id == group_id);
+
+        if (group is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

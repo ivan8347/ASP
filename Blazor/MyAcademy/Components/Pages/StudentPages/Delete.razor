@@ -19,31 +19,31 @@
     else {
         <dl class="row">
             <dt class="col-sm-2">LastName</dt>
-            <dd class="col-sm-10">@student.LastName</dd>
+            <dd class="col-sm-10">@student.last_name</dd>
         </dl>
         <dl class="row">
             <dt class="col-sm-2">FirstName</dt>
-            <dd class="col-sm-10">@student.FirstName</dd>
+            <dd class="col-sm-10">@student.first_name</dd>
         </dl>
         <dl class="row">
             <dt class="col-sm-2">MiddleName</dt>
-            <dd class="col-sm-10">@student.MiddleName</dd>
+            <dd class="col-sm-10">@student.middle_name</dd>
         </dl>
         <dl class="row">
             <dt class="col-sm-2">BirthDate</dt>
-            <dd class="col-sm-10">@student.BirthDate</dd>
+            <dd class="col-sm-10">@student.birth_date</dd>
         </dl>
         <dl class="row">
             <dt class="col-sm-2">Email</dt>
-            <dd class="col-sm-10">@student.Email</dd>
+            <dd class="col-sm-10">@student.email</dd>
         </dl>
         <dl class="row">
             <dt class="col-sm-2">Phone</dt>
-            <dd class="col-sm-10">@student.Phone</dd>
+            <dd class="col-sm-10">@student.phone</dd>
         </dl>
         <dl class="row">
             <dt class="col-sm-2">GroupId</dt>
-            <dd class="col-sm-10">@student.GroupId</dd>
+            <dd class="col-sm-10">@student.group</dd>
         </dl>
         <EditForm method="post" Model="student" OnValidSubmit="DeleteStudent" FormName="delete" Enhance>
             <button type="submit" class="btn btn-danger" disabled="@(student is null)">Delete</button> |
@@ -61,7 +61,7 @@
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-        student = await context.Students.FirstOrDefaultAsync(m => m.StudId == StudId);
+        student = await context.Students.FirstOrDefaultAsync(m => m.stud_id == StudId);
 
         if (student is null)
         {

@@ -6,30 +6,25 @@ namespace MyAcademy.Models
     public class Student
     {
         [Key]
-        [Column("stud_id")]
-        public int StudId { get; set; }
+        public int stud_id { get; set; }
 
-        [Column("last_name")]
-        public string LastName { get; set; } = string.Empty;
+        public string last_name { get; set; } = string.Empty;
 
-        [Column("first_name")]
-        public string FirstName { get; set; } = string.Empty;
+        public string first_name { get; set; } = string.Empty;
 
-        [Column("middle_name")]
-        public string? MiddleName { get; set; }
+        public string? middle_name { get; set; }
 
-        [Column("birth_date", TypeName = "DATE")]
-        public DateOnly? BirthDate { get; set; }
+        [Column(TypeName = "DATE")]
+        public DateOnly? birth_date { get; set; }
 
-        [Column("email")]
-        public string? Email { get; set; }
+        public string? email { get; set; }
 
-        [Column("phone")]
-        public string? Phone { get; set; }
+        public string? phone { get; set; }
 
-      
 
         [Column("group")]
-        public int? GroupId { get; set; }
+        [ForeignKey(nameof(Group))]
+        public int? group { get; set; }
+        public Group Group{ get; set; }
     }
 }

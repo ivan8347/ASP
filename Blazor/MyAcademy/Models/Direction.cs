@@ -10,5 +10,6 @@ namespace MyAcademy.Models
         public int direction_id {  get; set; }
         [Required]
         public string direction_name { get; set; }
+        public ICollection <Group> Groups { get; set; }
     }
 }

@@ -17,25 +17,25 @@
     }
     else {
         <dl class="row">
-            <dt class="col-sm-2">LastName</dt>
-            <dd class="col-sm-10">@teacher.LastName</dd>
-            <dt class="col-sm-2">FirstName</dt>
-            <dd class="col-sm-10">@teacher.FirstName</dd>
-            <dt class="col-sm-2">MiddleName</dt>
-            <dd class="col-sm-10">@teacher.MiddleName</dd>
-            <dt class="col-sm-2">BirthDate</dt>
-            <dd class="col-sm-10">@teacher.BirthDate</dd>
-            <dt class="col-sm-2">Email</dt>
-            <dd class="col-sm-10">@teacher.Email</dd>
-            <dt class="col-sm-2">Phone</dt>
-            <dd class="col-sm-10">@teacher.Phone</dd>
-            <dt class="col-sm-2">WorkSince</dt>
-            <dd class="col-sm-10">@teacher.WorkSince</dd>
-            <dt class="col-sm-2">Rate</dt>
-            <dd class="col-sm-10">@teacher.Rate</dd>
+            <dt class="col-sm-2">last_name</dt>
+            <dd class="col-sm-10">@teacher.last_name</dd>
+            <dt class="col-sm-2">first_name</dt>
+            <dd class="col-sm-10">@teacher.first_name</dd>
+            <dt class="col-sm-2">middle_name</dt>
+            <dd class="col-sm-10">@teacher.middle_name</dd>
+            <dt class="col-sm-2">birth_date</dt>
+            <dd class="col-sm-10">@teacher.birth_date</dd>
+            <dt class="col-sm-2">email</dt>
+            <dd class="col-sm-10">@teacher.email</dd>
+            <dt class="col-sm-2">phone</dt>
+            <dd class="col-sm-10">@teacher.phone</dd>
+            <dt class="col-sm-2">work_since</dt>
+            <dd class="col-sm-10">@teacher.work_since</dd>
+            <dt class="col-sm-2">rate</dt>
+            <dd class="col-sm-10">@teacher.rate</dd>
         </dl>
         <div>
-            <a href="@($"/teachers/edit?teacherid={teacher.TeacherId}")">Edit</a> |
+            <a href="@($"/teachers/edit?teacher_id={teacher.teacher_id}")">Edit</a> |
             <a href="@($"/teachers")">Back to List</a>
         </div>
     }
@@ -45,12 +45,12 @@
     private Teacher? teacher;
 
     [SupplyParameterFromQuery]
-    private int TeacherId { get; set; }
+    private int teacher_id { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-        teacher = await context.Teachers.FirstOrDefaultAsync(m => m.TeacherId == TeacherId);
+        teacher = await context.Teachers.FirstOrDefaultAsync(m => m.teacher_id == teacher_id);
 
         if (teacher is null)
         {
